@@ -10,8 +10,8 @@ Include a file that has your raw recorded radio signal and a file that includes 
 
 Provide a write-up describing:
 
-Processing Methods
-Filter design decisions
-Observations of Fourier Analysis steps
-Challenges you encountered while doing the project.
-Is there a better method for processing the data than Fourier Analysis for providing context of speech?
+- Processing Methods
+- Filter design decisions
+- Observations of Fourier Analysis steps
+- Challenges you encountered while doing the project.
+- Is there a better method for processing the data than Fourier Analysis for providing context of speech?
