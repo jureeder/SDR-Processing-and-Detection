@@ -6,12 +6,18 @@ Process the dataset to provide filtering for extraction of audio signal.
 
 Process the dataset to provide Fourier Analysis of the Acquired signal both prior to and after filtering steps (provide a Figure of each)
 
-Include a file that has your raw recorded radio signal and a file that includes the audio output of that signal with and without your designed filters.
+Include a file that has your raw recorded radio signal and a file that includes the audio output of that signal with and without your designed filter.
+
+
 
 Provide a write-up describing:
 
 - Processing Methods
+
 - Filter design decisions
+  
 - Observations of Fourier Analysis steps
+  
 - Challenges you encountered while doing the project.
+  
 - Is there a better method for processing the data than Fourier Analysis for providing context of speech?
