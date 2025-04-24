@@ -1,3 +1,7 @@
+# This code is just the filtering portion. In this case a Butterworth filter is used as a placeholder, but can be replaced.
+
+from scipy.signal import decimate, butter, lfilter
+
 # Apply low-pass filter to remove noise from demodulated signal (e.g., use a cutoff of 15kHz)
 def butter_lowpass(cutoff, fs, order=5):
     nyquist = 0.5 * fs
