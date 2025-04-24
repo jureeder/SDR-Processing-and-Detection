@@ -1,5 +1,9 @@
 Group Members: Katilynn Mar, Juliette Reeder, Ashley Holland
 
+Ensure required libraries are installed: 
+
+pip install numpy scipy matplotlib sounddevice pyrtlsdr
+
 Using sample code available on the PySDR website (https://pysdr.org/index.htmlLinks to an external site.), develop code for detection, filtering, and Fourier Analysis of various FM radio stations. Develop code to acquire a radio signal for a period, process the audio signal, and output the sound. (Does not need to be real time)
 
 Make observations regarding filter specifications, acquisition duration, and device tuning related to quality of the audio signal and the role detection time plays in the Fourier Analysis of the signal.
