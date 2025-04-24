@@ -29,6 +29,24 @@ sdr.close()
 np.save('raw_signal.npy', samples)
 print("Signal acquisition complete. Saved as 'raw_signal.npy'")
 
+# Visualize raw IQ signal in frequency domain (before demodulation)
+def plot_raw_signal_fft(iq_data, fs):
+    N = len(iq_data)
+    freqs = np.fft.fftfreq(N, d=1/fs)
+    fft_signal = np.fft.fft(iq_data)
+    fft_magnitude = np.abs(fft_signal)
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(freqs[:N//2], fft_magnitude[:N//2])  # Only positive frequencies
+    plt.title('FFT of Raw IQ Signal')
+    plt.xlabel('Frequency (Hz)')
+    plt.ylabel('Magnitude')
+    plt.grid(True)
+    plt.show()
+
+# Call the function to visualize the raw IQ signal
+plot_raw_signal_fft(samples, 2400000)
+
 # FM Demodulation -- turn Raw IQ values into Audio
 def fm_demodulate(iq_data):
     # Calculate the phase difference between consecutive IQ samples
@@ -37,52 +55,21 @@ def fm_demodulate(iq_data):
 
 demodulated = fm_demodulate(samples)
 
-# Apply low-pass filter to remove noise from demodulated signal (e.g., use a cutoff of 15kHz)
-def butter_lowpass(cutoff, fs, order=5):
-    nyquist = 0.5 * fs
-    normal_cutoff = cutoff / nyquist
-    b, a = butter(order, normal_cutoff, btype='low', analog=False)
-    return b, a
+# Save demodulated signal
+np.save('demodulated_signal.npy', demodulated)
+print("Demodulation complete. Saved as 'demodulated_signal.npy'")
 
-def butter_lowpass_filter(data, cutoff, fs, order=5):
-    b, a = butter_lowpass(cutoff, fs, order)
-    y = lfilter(b, a, data)
-    return y
 
-# Low-pass filter demodulated signal (remove high-frequency noise)
-filtered_demodulated = butter_lowpass_filter(demodulated, 15000, 2400000)  # 15 kHz cutoff, 2.4 MHz sample rate
+# Filtering, function to get to filtered_demodulated
 
-# Fourier Analysis: Compute FFT of the filtered demodulated signal
-def plot_fft(signal, fs):
-    # Perform FFT
-    N = len(signal)
-    freqs = np.fft.fftfreq(N, d=1/fs)  # Frequency axis
-    fft_signal = np.fft.fft(signal)  # Compute FFT
-    fft_magnitude = np.abs(fft_signal)  # Magnitude spectrum
+# FFT, function get to audio
 
-    # Plot
-    plt.figure(figsize=(10, 6))
-    plt.plot(freqs[:N//2], fft_magnitude[:N//2])  # Only positive frequencies
-    plt.title('FFT of Demodulated Signal')
-    plt.xlabel('Frequency (Hz)')
-    plt.ylabel('Magnitude')
-    plt.grid(True)
-    plt.show()
-
-# Plot FFT of the filtered demodulated signal to inspect the frequency content
-plot_fft(filtered_demodulated, 2400000)
-
+# Output audio, something like this:
 # Downsample the filtered signal to audio rate (~24kHz)
-audio = decimate(filtered_demodulated, 100)  # Downsample by factor of 100
+#audio = decimate(filtered_demodulated, 100)  # Downsample by factor of 100
 
 # Output Audio
-sd.play(audio, samplerate=24000)
-sd.wait()
-
-# Save filtered audio
-np.save('filtered_audio.npy', audio)
-print("Audio playback complete. Saved as 'filtered_audio.npy'")
-
-
+#sd.play(audio, samplerate=24000)
+#sd.wait()
 
 
