@@ -1,6 +1,6 @@
 
 # This program detects a signal from an FM radio station, demodulates it, filters it, and conducts Fourier analysis 
-# to output a signal in a frequency range audible to the human ear.
+# to output both a filtered and unfiltered signal in a frequency range audible to the human ear.
 
 from rtlsdr import RtlSdr
 import numpy as np
