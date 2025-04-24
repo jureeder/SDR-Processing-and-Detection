@@ -33,7 +33,7 @@ sdr.close()
 np.save('raw_signal.npy', samples)
 print("Signal acquisition complete. Saved as 'raw_signal.npy'")
 
-# Visualize raw IQ signal in frequency domain (before demodulation)
+# Plot raw IQ signal in frequency domain (before demodulation)
 def plot_raw_signal_time(iq_data, fs):
     time = 256 * 1024 / fs
     signal = iq_data
@@ -46,7 +46,7 @@ def plot_raw_signal_time(iq_data, fs):
     plt.grid(True)
     plt.show()
 
-# Visualize raw IQ signal in frequency domain (before demodulation)
+# Plot raw IQ signal in frequency domain (before demodulation)
 def plot_raw_signal_fft(iq_data, fs):
     N = len(iq_data)
     freqs = np.fft.fftfreq(N, d=1/fs)
@@ -61,7 +61,7 @@ def plot_raw_signal_fft(iq_data, fs):
     plt.grid(True)
     plt.show()
 
-# Fourier Analysis: Compute FFT of the unfiltered demodulated signal
+# Fourier Analysis: Compute and plot FFT of the unfiltered demodulated signal
 def plot_unfiltered_fft(signal, fs):
     N = len(signal)
     freqs = np.fft.fftfreq(N, d=1/fs)  # Frequency axis
@@ -77,7 +77,7 @@ def plot_unfiltered_fft(signal, fs):
     plt.grid(True)
     plt.show()
 
-# Fourier Analysis: Compute FFT of the filtered demodulated signal
+# Fourier Analysis: Compute and plot FFT of the filtered demodulated signal
 def plot_fft(signal, fs):
     N = len(signal)
     freqs = np.fft.fftfreq(N, d=1/fs)  # Frequency axis
@@ -126,7 +126,8 @@ scaled_demod_audio = np.int16(demod_audio / np.max(np.abs(demod_audio)) * 32767)
 write('unfiltered_audio.wav', 24000, scaled_demod_audio)
 print("Saved as 'unfiltered_audio.wav'")
 
-# Apply low-pass filter to remove noise from demodulated signal 
+
+# Apply low-pass Butterworth filter to remove noise from demodulated signal 
 def butter_lowpass(cutoff, fs, order=5):
     nyquist = 0.5 * fs
     normal_cutoff = cutoff / nyquist
