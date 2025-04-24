@@ -1,9 +1,7 @@
-# detect_fm_signal.py
+# This portion of the program only detects the IQ signals, saves the raw IQ data, then demodulates the singal.
 
 from rtlsdr import RtlSdr
 import numpy as np
-from scipy.signal import decimate, butter, lfilter
-import sounddevice as sd
 
 # Initialize the SDR device
 sdr = RtlSdr()
