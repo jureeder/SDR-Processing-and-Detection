@@ -7,6 +7,7 @@ import numpy as np
 from scipy.signal import decimate, butter, lfilter
 import sounddevice as sd
 import matplotlib.pyplot as plt
+from scipy.io.wavfile import write
 
 # Initialize the SDR device
 sdr = RtlSdr()
@@ -103,3 +104,13 @@ sd.wait()
 # Save filtered audio
 np.save('filtered_audio.npy', audio)
 print("Audio playback complete. Saved as 'filtered_audio.npy'")
+
+from scipy.io.wavfile import write
+
+# Convert float audio to 16-bit PCM format
+scaled_audio = np.int16(audio / np.max(np.abs(audio)) * 32767)
+
+# Write to a WAV file
+write('filtered_audio.wav', 24000, scaled_audio)
+print("Saved as 'filtered_audio.wav'")
+
