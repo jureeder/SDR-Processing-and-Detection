@@ -1,4 +1,5 @@
-# Fourier Analysis: Compute FFT of the filtered demodulated signal
+# This portion of the code computes and plots the FFT 
+
 def plot_fft(signal, fs):
     # Perform FFT
     N = len(signal)
