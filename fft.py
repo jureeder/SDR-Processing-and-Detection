@@ -15,6 +15,9 @@ def plot_fft(signal, fs):
     plt.ylabel('Magnitude')
     plt.grid(True)
     plt.show()
+    
+# Plot FFT of the filtered demodulated signal to inspect the frequency content
+plot_fft(filtered_demodulated, 2400000)
 
 # Downsample the filtered signal to audio rate (~24kHz)
 audio = decimate(filtered_demodulated, 100)  # Downsample by factor of 100
