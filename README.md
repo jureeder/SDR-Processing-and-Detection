@@ -27,3 +27,6 @@ Provide a write-up describing:
 - Challenges you encountered while doing the project.
   
 - Is there a better method for processing the data than Fourier Analysis for providing context of speech?
+
+
+Write-up can be edited by following this link: https://www.overleaf.com/7861419241mgrvzyyffwdz#85c7ab
