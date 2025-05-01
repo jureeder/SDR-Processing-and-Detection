@@ -1,4 +1,3 @@
-
 # This program detects a signal from an FM radio station, demodulates it, filters it, and conducts Fourier analysis 
 # to output both a filtered and unfiltered signal in a frequency range audible to the human ear.
 
@@ -8,6 +7,7 @@ from scipy.signal import decimate, butter, lfilter
 import sounddevice as sd
 import matplotlib.pyplot as plt
 from scipy.io.wavfile import write
+from scipy.signal import firwin, lfilter
 
 # Initialize the SDR device
 sdr = RtlSdr()
@@ -32,19 +32,6 @@ sdr.close()
 # Save Raw IQ Data
 np.save('raw_signal.npy', samples)
 print("Signal acquisition complete. Saved as 'raw_signal.npy'")
-
-# Plot raw IQ signal in frequency domain (before demodulation)
-def plot_raw_signal_time(iq_data, fs):
-    time = 256 * 1024 / fs
-    signal = iq_data
-
-    plt.figure(figsize=(10, 6))
-    plt.plot(time[:0.11], signal[:0.11])  # Only positive time
-    plt.title('Time Domain Plot of Raw IQ Signal')
-    plt.xlabel('Time (S)')
-    plt.ylabel('Signal')
-    plt.grid(True)
-    plt.show()
 
 # Plot raw IQ signal in frequency domain (before demodulation)
 def plot_raw_signal_fft(iq_data, fs):
@@ -77,24 +64,7 @@ def plot_unfiltered_fft(signal, fs):
     plt.grid(True)
     plt.show()
 
-# Fourier Analysis: Compute and plot FFT of the filtered demodulated signal
-def plot_fft(signal, fs):
-    N = len(signal)
-    freqs = np.fft.fftfreq(N, d=1/fs)  # Frequency axis
-    fft_signal = np.fft.fft(signal)  # Compute FFT
-    fft_magnitude = np.abs(fft_signal)  # Magnitude spectrum
-
-    # Plot
-    plt.figure(figsize=(10, 6))
-    plt.plot(freqs[:N//2], fft_magnitude[:N//2])  # Only positive frequencies
-    plt.title('FFT of Filtered Demodulated Signal')
-    plt.xlabel('Frequency (Hz)')
-    plt.ylabel('Magnitude')
-    plt.grid(True)
-    plt.show()
-
 # Call the functions to visualize the raw IQ signal
-plot_raw_signal_time(samples, 2400000)
 plot_raw_signal_fft(samples, 2400000)
 
 # FM Demodulation -- turn Raw IQ values into Audio
@@ -127,20 +97,15 @@ write('unfiltered_audio.wav', 24000, scaled_demod_audio)
 print("Saved as 'unfiltered_audio.wav'")
 
 
-# Apply low-pass Butterworth filter to remove noise from demodulated signal 
-def butter_lowpass(cutoff, fs, order=5):
-    nyquist = 0.5 * fs
-    normal_cutoff = cutoff / nyquist
-    b, a = butter(order, normal_cutoff, btype='low', analog=False)
-    return b, a
-
-def butter_lowpass_filter(data, cutoff, fs, order=5):
-    b, a = butter_lowpass(cutoff, fs, order)
-    y = lfilter(b, a, data)
-    return y
+# Apply low-pass Hanning filter to remove noise from demodulated signal 
+def hann_lowpass_filter(data, cutoff, fs, order=5):
+    normalized_cutoff = cutoff / (fs * 0.5)
+    fir_coeff = firwin(101, normalized_cutoff,window='hann')
+    filtered = lfilter(fir_coeff, 1.0, data)
+    return filtered
 
 # Low-pass filter demodulated signal (remove high-frequency noise)
-filtered_demodulated = butter_lowpass_filter(demodulated, 15000, 2400000)  # 15 kHz cutoff, 2.4 MHz sample rate
+filtered_demodulated = hann_lowpass_filter(demodulated, 15000, 2400000)  # 15 kHz cutoff, 2.4 MHz sample rate
 
 # Fourier Analysis: Compute FFT of the filtered demodulated signal
 def plot_fft(signal, fs):
